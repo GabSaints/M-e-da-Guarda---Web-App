@@ -1,4 +1,4 @@
-# Entregável web app — Mais Perto
+# Entregável web app — Mãe da Guarda
 
 Protótipo do produto digital para responsáveis. Abra `index.html` em navegador moderno. HTML, CSS e JavaScript são editáveis e funcionam sem banco de dados ou serviços externos. Links das fontes exigem internet.
 

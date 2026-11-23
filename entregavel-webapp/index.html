@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f2"><meta name="description" content="Mais Perto: roteiro educativo em três passos para responsáveis.">
+  <title>Mais Perto — roteiro em 3 passos</title><link rel="stylesheet" href="styles.css"><script src="app.js" defer></script>
+</head>
+<body>
+  <header class="top"><div class="wrap top-inner"><a class="brand" href="index.html">✳ <span>mais perto.</span></a><span>ROTEIRO PARA RESPONSÁVEIS</span></div></header>
+  <main class="wrap">
+    <section class="intro"><span class="eyebrow">3 PASSOS · CERCA DE 15 MINUTOS PARA SE PREPARAR</span><h1>Seu primeiro plano para <em>agir com cuidado.</em></h1><p>Organize sua preocupação, prepare uma conversa e escolha um próximo apoio. A conversa com a criança acontece no tempo dela. Nenhuma resposta é enviada ou salva; ao final, você pode imprimir o resumo.</p><a class="intro-start" href="#roteiro">Começar o roteiro <span aria-hidden="true">↓</span></a><div class="notice"><strong>Antes de começar</strong><p>Estar mais sozinho, sentir-se excluído e sofrer bullying são situações diferentes. Este roteiro não diagnostica nem substitui a escola ou profissionais. Em caso de violência, ameaça, risco imediato ou sofrimento intenso, priorize a segurança e procure apoio adequado agora.</p></div></section>
+    <div class="progress" id="roteiro" aria-label="Progresso do roteiro"><div class="progress-label"><span id="step-counter" aria-live="polite">PASSO 1 DE 3</span><span id="step-name">OBSERVAR</span></div><div class="progress-track"><span id="progress-fill"></span></div></div>
+
+    <section class="step" data-step="1"><div class="step-heading"><span class="number">01</span><div><span class="eyebrow">OBSERVE SEM ROTULAR</span><h2>O que você sabe até aqui?</h2><p>Escolha o que mais se aproxima da situação. Você pode mudar de ideia depois de conversar com a criança.</p></div></div>
+      <div class="choices" role="radiogroup" aria-label="Situação percebida">
+        <label class="choice"><input type="radio" name="situation" value="unclear"><span class="radio" aria-hidden="true"></span><span><strong>Ainda tenho poucas informações</strong><small>Percebi uma mudança ou tenho uma preocupação, mas não sei o que aconteceu.</small></span></label>
+        <label class="choice"><input type="radio" name="situation" value="alone"><span class="radio" aria-hidden="true"></span><span><strong>Ele parece mais sozinho</strong><small>Menos interesse ou menos contato com colegas, sem relato claro de exclusão.</small></span></label>
+        <label class="choice"><input type="radio" name="situation" value="excluded"><span class="radio" aria-hidden="true"></span><span><strong>Ele contou que ficou de fora</strong><small>Houve um relato de exclusão; ainda preciso entender frequência e contexto.</small></span></label>
+        <label class="choice"><input type="radio" name="situation" value="harm"><span class="radio" aria-hidden="true"></span><span><strong>Ele contou sobre agressão ou ameaça</strong><small>Há relato de violência, intimidação ou medo.</small></span></label>
+      </div>
+      <div class="alert early-alert" id="early-alert" hidden><strong>Segurança vem antes do roteiro</strong><p>Se a agressão ou ameaça está acontecendo agora, ou se a criança não está segura, interrompa o roteiro e procure a escola e os serviços locais de proteção ou emergência conforme a situação.</p></div>
+      <div class="reflection"><strong>Uma pausa útil</strong><p>O que você viu com seus próprios olhos? O que a criança contou? O que é uma hipótese sua? Você não precisa registrar isso aqui.</p></div>
+      <p class="error" id="choice-error" role="alert"></p><div class="actions"><button class="btn primary" type="button" id="to-two">Preparar a conversa <span>→</span></button></div>
+    </section>
+
+    <section class="step" data-step="2" hidden><div class="step-heading"><span class="number">02</span><div><span class="eyebrow">ESCUTE PRIMEIRO</span><h2>Prepare uma conversa possível.</h2><p id="conversation-intro">Escolha um momento tranquilo. Uma pergunta aberta pode ajudar a ouvir antes de concluir.</p></div></div>
+      <div class="alert early-alert" id="conversation-alert" hidden><strong>Se houver risco, aja antes da conversa planejada</strong><p>Verifique se a criança está segura agora. Procure apoio adulto e os serviços adequados à gravidade da situação. A frase abaixo é apenas uma forma de acolher, não um motivo para adiar proteção.</p></div>
+      <div class="script-card"><span class="eyebrow">FRASE PARA ADAPTAR</span><blockquote id="script-text">“Tenho percebido que a escola talvez esteja diferente para você. Como têm sido seus dias por lá?”</blockquote><button type="button" id="copy-script" class="small-button">Copiar frase</button><span id="copy-status" role="status"></span></div>
+      <div class="follow-up"><span class="eyebrow">SE A CONVERSA CONTINUAR</span><p id="follow-up-text"></p></div>
+      <div class="two-col"><article><h3>Se ele quiser falar</h3><ul id="talk-list"><li>Escute até o fim, sem procurar um culpado naquele momento.</li><li>Reconheça o sentimento: “Entendo que isso foi difícil”.</li><li>Pergunte: “O que você gostaria que eu soubesse ou fizesse agora?”</li></ul></article><article><h3>Se ele não quiser falar</h3><ul id="pause-list"><li>Respeite a pausa: “Tudo bem. Podemos conversar outro dia”.</li><li>Mostre disponibilidade sem insistir.</li><li>Observe se há sofrimento persistente ou sinais de risco.</li></ul></article></div>
+      <div class="reflection"><strong>Evite promessas que não controla</strong><p>Você pode oferecer apoio e proteção. Evite prometer segredo absoluto, amizade garantida ou solução imediata.</p></div>
+      <div class="actions"><button class="btn ghost" type="button" data-back="1">← Voltar</button><button class="btn primary" type="button" id="to-three">Escolher o próximo passo <span>→</span></button></div>
+    </section>
+
+    <section class="step" data-step="3" hidden><div class="step-heading"><span class="number">03</span><div><span class="eyebrow">AJA COM CUIDADO</span><h2>Um próximo passo possível.</h2><p>Use a orientação abaixo como ponto de partida. Ela não é uma avaliação do caso.</p></div></div>
+      <div id="recommendation" class="recommendation"></div>
+      <div class="action-plan"><span class="eyebrow">PLANO DE AÇÃO</span><div class="action-plan-grid"><article><span>HOJE</span><p id="plan-today"></p></article><article><span>DEPOIS</span><p id="plan-next"></p></article><article><span>SE HOUVER RISCO</span><p id="plan-risk"></p></article></div></div>
+      <details class="school-template" id="school-template"><summary>Modelo de mensagem para a escola <span>+</span></summary><div class="school-content"><div class="school-head"><div><span class="eyebrow">PARA ADAPTAR</span><h3>Convite para uma conversa</h3></div><button type="button" id="copy-school" class="small-button">Copiar modelo</button></div><p id="school-text">Olá. Gostaria de conversar sobre como meu filho tem vivido a rotina escolar. Percebi alguns sinais que me preocupam e quero compreender melhor o contexto, ouvir a observação da escola e combinar formas de apoio. Poderíamos agendar uma conversa em um momento adequado?</p><span id="school-status" role="status"></span><small>Adapte a mensagem fora deste app. Em situação de risco, procure apoio imediato, sem esperar resposta por e-mail.</small></div></details>
+      <div class="alert"><strong>Se houver violência, ameaça ou sofrimento intenso</strong><p>Priorize a segurança da criança. Procure a escola, profissionais de saúde e os serviços locais de proteção ou emergência conforme a gravidade. Não espere concluir este roteiro.</p></div>
+      <div class="summary" id="summary"><h3>Seu resumo</h3><p id="summary-text"></p><p><strong>Frase para começar:</strong> <span id="summary-script"></span></p><p><strong>Hoje:</strong> <span id="summary-action"></span></p><p><strong>Depois:</strong> <span id="summary-next"></span></p><small>Este resumo não contém dados identificáveis da criança.</small></div>
+      <div class="actions"><button class="btn ghost" type="button" data-back="2">← Voltar</button><button class="btn ghost" type="button" id="restart">Recomeçar</button><button class="btn primary" type="button" id="print">Imprimir resumo <span>↗</span></button></div>
+    </section>
+    <footer><p>Mais Perto · Conteúdo educativo para responsáveis. Protótipo editorial 1.0 · 10/11/2026.</p><p>Referências: <a href="https://www.unicef.org/lac/en/parenting-lac/security-protection/how-talk-your-children-about-bullying" target="_blank" rel="noopener noreferrer">UNICEF</a> · <a href="https://www.unicef.org/parenting/child-care/how-talk-school-about-bullying" target="_blank" rel="noopener noreferrer">UNICEF Parenting</a> · <a href="https://www.gov.br/mec/pt-br/escola-que-protege/semanaconvivenciaflyerfamilias.pdf" target="_blank" rel="noopener noreferrer">MEC</a>.</p></footer>
+  </main>
+</body>
+</html>

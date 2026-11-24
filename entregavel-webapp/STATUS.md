@@ -1,7 +1,7 @@
-# Estado e pendências
+# Estado da entrega — 23/11/2026
 
-**Funciona localmente:** quatro caminhos do roteiro, avisos de segurança, cópia de frases, modelo de escola, resumo e impressão. Responsivo em celular e desktop. Sem banco de dados.
+Nova interface integrada com roteiro em três etapas, quatro situações, sete atividades, recursos, ajuda local e progresso opcional no navegador. Imagens e fontes locais incluídas.
 
-**Pendente antes da venda:** revisão por profissional brasileiro de educação/psicologia infantil, revisão jurídica/privacidade, validação do tempo estimado, hospedagem protegida, autenticação/entitlement, teste de compra e reembolso, suporte e dados comerciais.
+Publicação solicitada pelo proprietário como demonstração pública em app.maedaguarda.com.br. Não há pagamento, conta, acesso comercial protegido ou atendimento conectado. O modo local permite demonstração e não comprova compra.
 
-Não publicar o diretório como produto pago em URL aberta. Não usar link secreto como controle de acesso.
+Pendente antes da venda: escolher e implementar autenticação, autorização no servidor para conteúdo e arquivos, checkout, webhook verificado, reembolso, suporte real e revisões profissional e jurídica. Consulte INTEGRACAO.md e PENDENCIAS-PARA-PUBLICAR.md.

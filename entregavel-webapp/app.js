@@ -1,161 +1,36 @@
-(() => {
-  'use strict';
-
-  let situation = null;
-  const names = ['OBSERVAR', 'CONVERSAR', 'AGIR'];
-  const scenarios = {
-    unclear: {
-      label: 'Você ainda tem poucas informações.',
-      intro: 'Comece pela curiosidade, sem supor que a mudança tenha uma única causa.',
-      script: 'Tenho percebido você um pouco diferente depois da escola. Como têm sido seus dias por lá?',
-      follow: 'Se ele quiser continuar: “Tem algum momento da escola que tem sido bom ou difícil para você?”',
-      title: 'Abra uma conversa e continue observando',
-      body: 'Você ainda tem poucas informações. Escute o que a criança deseja contar e combine um momento para retomar. Se o sofrimento persistir ou surgirem relatos de violência, procure apoio adequado.',
-      today: 'Escolha um momento tranquilo e faça a pergunta aberta.',
-      next: 'Retome a conversa depois e observe se a mudança persiste.',
-      risk: 'Se aparecer relato de ameaça, violência ou sofrimento intenso, priorize apoio adulto e proteção.'
-    },
-    alone: {
-      label: 'Você percebeu que ele parece mais sozinho.',
-      intro: 'Menos contato com colegas não explica, por si só, o que a criança sente. Convide sem pressionar.',
-      script: 'Tenho percebido que você passa mais tempo sozinho. Como você tem se sentido na escola?',
-      follow: 'Se ele quiser continuar: “Com quem ou em que momentos você se sente mais à vontade?”',
-      title: 'Entenda como ele vive essa fase',
-      body: 'Pergunte sobre momentos bons e difíceis da escola e sobre pessoas com quem ele se sente à vontade. Se o afastamento vier com sofrimento persistente, considere conversar com a escola e buscar profissionais.',
-      today: 'Pergunte como ele tem se sentido, sem tratar ficar sozinho como um defeito.',
-      next: 'Combine uma nova conversa e observe se há sofrimento persistente.',
-      risk: 'Se surgirem sinais de violência ou sofrimento intenso, procure apoio adequado sem esperar.'
-    },
-    excluded: {
-      label: 'Ele relatou que ficou de fora.',
-      intro: 'Acolha o relato antes de decidir o que ele significa. Pergunte como ele gostaria de ser apoiado.',
-      script: 'Obrigado por me contar que você ficou de fora. Como foi para você? O que gostaria que eu soubesse?',
-      follow: 'Se ele quiser continuar: “Isso aconteceu outras vezes? O que você gostaria que eu fizesse para ajudar?”',
-      title: 'Acolha o relato e combine apoio',
-      body: 'Procure entender o que aconteceu, com que frequência e como a criança gostaria de ser ajudada. Se a exclusão for persistente ou vier com agressão, converse com a escola sobre proteção e acompanhamento.',
-      today: 'Agradeça a confiança, escute o relato e pergunte como ele quer ser apoiado.',
-      next: 'Se a exclusão persistir, procure a escola para entender o contexto e combinar apoio.',
-      risk: 'Se houver agressão, ameaça ou sofrimento intenso, priorize segurança e ajuda imediata.'
-    },
-    harm: {
-      label: 'Ele relatou agressão ou ameaça.',
-      intro: 'Antes de qualquer roteiro, verifique se a criança está segura. Não espere uma nova ocorrência para buscar apoio.',
-      script: 'Obrigado por me contar. Você está seguro agora? Vou procurar ajuda com você.',
-      follow: 'Depois de garantir segurança: “O que você precisa de mim neste momento?” Evite transformar a conversa em interrogatório.',
-      title: 'Priorize segurança e apoio adulto',
-      body: 'Leve o relato a sério. Procure a escola e os serviços adequados à gravidade para proteger a criança. Em risco imediato, use os serviços locais de emergência. Não deixe a criança resolver isso sozinha.',
-      today: 'Verifique a segurança da criança e procure a escola ou serviços adequados sem esperar.',
-      next: 'Combine com os adultos responsáveis como acompanhar e proteger a criança.',
-      risk: 'Em risco imediato, use os serviços locais de emergência. Este roteiro não atende urgências.'
-    }
-  };
-
-  const $ = id => document.getElementById(id);
-  const choices = [...document.querySelectorAll('input[name="situation"]')];
-  const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const defaultTalk = [
-    'Escute até o fim, sem procurar um culpado naquele momento.',
-    'Reconheça o sentimento: “Entendo que isso foi difícil”.',
-    'Pergunte: “O que você gostaria que eu soubesse ou fizesse agora?”'
-  ];
-  const defaultPause = [
-    'Respeite a pausa: “Tudo bem. Podemos conversar outro dia”.',
-    'Mostre disponibilidade sem insistir.',
-    'Observe se há sofrimento persistente ou sinais de risco.'
-  ];
-  const safetyTalk = [
-    'Verifique primeiro se a criança está segura, antes de aprofundar o relato.',
-    'Agradeça por ela contar e diga que buscará ajuda.',
-    'Pergunte o que ela precisa neste momento, sem transformar a conversa em interrogatório.'
-  ];
-  const safetyPause = [
-    'Não pressione por detalhes que a criança não quer dar agora.',
-    'Diga que ela não precisa lidar com a situação sozinha.',
-    'Mesmo sem todos os detalhes, procure apoio adulto e medidas de proteção.'
-  ];
-
-  function setList(id, items) {
-    $(id).querySelectorAll('li').forEach((li, index) => { li.textContent = items[index]; });
-  }
-
-  function show(step) {
-    document.querySelectorAll('.step').forEach(section => { section.hidden = Number(section.dataset.step) !== step; });
-    $('step-counter').textContent = `PASSO ${step} DE 3`;
-    $('step-name').textContent = names[step - 1];
-    $('progress-fill').style.width = `${step / 3 * 100}%`;
-    const heading = document.querySelector(`.step[data-step="${step}"] h2`);
-    heading.tabIndex = -1;
-    heading.focus({ preventScroll: true });
-    $('roteiro').scrollIntoView({ behavior: prefersReducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
-  }
-
-  function renderConversation() {
-    const item = scenarios[situation];
-    $('conversation-intro').textContent = item.intro;
-    $('script-text').textContent = `“${item.script}”`;
-    $('follow-up-text').textContent = item.follow;
-    $('conversation-alert').hidden = situation !== 'harm';
-    setList('talk-list', situation === 'harm' ? safetyTalk : defaultTalk);
-    setList('pause-list', situation === 'harm' ? safetyPause : defaultPause);
-    $('copy-status').textContent = '';
-  }
-
-  function renderResult() {
-    const item = scenarios[situation];
-    const box = $('recommendation');
-    box.replaceChildren();
-    const eyebrow = document.createElement('span'); eyebrow.textContent = 'UM CAMINHO POSSÍVEL';
-    const heading = document.createElement('h3'); heading.textContent = item.title;
-    const body = document.createElement('p'); body.textContent = item.body;
-    box.append(eyebrow, heading, body);
-    $('plan-today').textContent = item.today;
-    $('plan-next').textContent = item.next;
-    $('plan-risk').textContent = item.risk;
-    $('summary-text').textContent = item.label;
-    $('summary-script').textContent = `“${item.script}”`;
-    $('summary-action').textContent = item.today;
-    $('summary-next').textContent = item.next;
-    $('school-template').open = situation === 'excluded' || situation === 'harm';
-  }
-
-  async function copy(text, statusId) {
-    const status = $(statusId);
-    try {
-      await navigator.clipboard.writeText(text);
-      status.textContent = 'Copiado.';
-    } catch {
-      status.textContent = 'Selecione e copie o texto acima.';
-    }
-  }
-
-  choices.forEach(input => {
-    input.addEventListener('change', () => {
-      situation = input.value;
-      choices.forEach(choice => choice.closest('.choice').classList.toggle('selected', choice.checked));
-      $('early-alert').hidden = situation !== 'harm';
-      $('choice-error').textContent = '';
-    });
-  });
-
-  $('to-two').addEventListener('click', () => {
-    if (!situation) {
-      $('choice-error').textContent = 'Escolha a opção que mais se aproxima para continuar.';
-      return;
-    }
-    renderConversation();
-    show(2);
-  });
-  $('to-three').addEventListener('click', () => { renderResult(); show(3); });
-  document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => show(Number(button.dataset.back))));
-  $('copy-script').addEventListener('click', () => copy(scenarios[situation].script, 'copy-status'));
-  $('copy-school').addEventListener('click', () => copy($('school-text').textContent.trim(), 'school-status'));
-  $('print').addEventListener('click', () => window.print());
-  $('restart').addEventListener('click', () => {
-    situation = null;
-    choices.forEach(choice => { choice.checked = false; choice.closest('.choice').classList.remove('selected'); });
-    $('early-alert').hidden = true;
-    $('copy-status').textContent = '';
-    $('school-status').textContent = '';
-    show(1);
-  });
+'use strict';
+(()=>{
+ const config=window.MG_APP_CONFIG||{};
+ const link=(value,fallback)=>{try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:fallback}catch{return fallback}};
+ document.querySelectorAll('[data-support]').forEach(a=>a.href=link(config.supportUrl,'#ajuda'));
+ if(config.mode!=='local'){document.querySelector('#application').hidden=true;document.querySelector('#mode').hidden=true;document.querySelector('#blocked').hidden=false;document.querySelector('#blocked-support').href=link(config.supportUrl,'#ajuda');return}
+ const C=window.MG_CONTENT,P=window.MG_PROGRESS,view=document.querySelector('#view');let route=null,step=1,ack=false,pace='quiet';
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const button=(action,label,cls='primary',attrs='')=>`<button type="button" class="${cls}" data-action="${action}" ${attrs}>${label}</button>`;
+ const header=(eyebrow,title,lead='')=>`<p class="eyebrow">${eyebrow}</p><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:''}`;
+ const safety=()=>`<div class="warning"><b>Proteção vem primeiro.</b><p>${esc(C.safety)}</p><a href="#seguranca">Ver orientações de segurança →</a></div>`;
+ const resource=(title,body,copy)=>`<article class="card"><h2>${title}</h2><p class="quote">${esc(body)}</p>${button('copy','Copiar texto','secondary',`data-copy="${copy}"`)}</article>`;
+ function home(){const state=P.snapshot();const next=C.days.find(d=>!state.days.includes(d.id));return `${header('BEM-VINDA AO MÃE DA GUARDA','Um começo possível,<br><em>no ritmo de vocês.</em>','Observe com cuidado, abra espaço para conversar e escolha um próximo apoio. Você não precisa resolver tudo de uma vez.')}<div class="home-hero"><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 400 400" focusable="false"><circle cx="300" cy="85" r="38" fill="#e3b45f"/><path d="M65 340V145a135 135 0 0 1 270 0v195" fill="#c77f75"/><path d="M105 340V155a95 95 0 0 1 190 0v185" fill="#faf5ef"/><path d="M140 340V165a60 60 0 0 1 120 0v175" fill="#ead6d2"/><path d="M85 340h245M200 340v-98" stroke="#3d293f" stroke-width="5" stroke-linecap="round"/><path d="M200 285q-57-68-72-20q-4 29 72 43M200 266q51-73 71-25q9 30-71 49" fill="#805369"/><path d="M63 337q-32-51-5-64q29 8 24 64" fill="#805369"/></svg></div><div><span class="pill">SEU PRIMEIRO PASSO</span><h2>Comece pelo que você percebeu.</h2><p>O roteiro adapta as frases e o plano inicial à situação que você escolher. Suas escolhas ficam só nesta sessão.</p><a class="primary" href="#roteiro">Abrir meu roteiro →</a></div></div><div class="grid"><article class="card"><span class="eyebrow">TRILHA FLEXÍVEL</span><h2>${state.days.length} de 7 atividades concluídas</h2><progress value="${state.days.length}" max="7">${state.days.length}/7</progress><p>${next?`Continue com: ${esc(next.title)}.`:'Você percorreu a trilha. Volte às atividades sempre que precisar.'}</p><a class="text-link" href="${next?'#dia-'+next.id:'#trilha'}">${next?'Continuar minha trilha':'Revisitar a trilha'} →</a></article><article class="card soft"><span class="eyebrow">PARA LEVAR À CONVERSA</span><h2>Uma pergunta de cada vez.</h2><p>“Tem alguma parte do dia que você quer me contar?”</p><a class="text-link" href="#recursos">Abrir frases e recursos →</a></article></div><p class="small">Este espaço é educativo. O guia não promete popularidade, amizades ou resultados clínicos.</p>`}
+ function wizard(){const r=route?C.routes[route]:null;let body='';
+ if(step===1){body=`<form id="route-form"><fieldset><legend>O que você percebeu até aqui?</legend><p class="muted">Escolha a opção mais próxima. Você poderá voltar e mudar.</p><div class="options">${Object.entries(C.routes).map(([id,r])=>`<label class="option"><input type="radio" name="route" value="${id}" ${route===id?'checked':''} required><span>${esc(r.label)}</span></label>`).join('')}</div></fieldset>${route==='harm'?safety():''}<p class="small">Uma situação isolada não define o que está acontecendo. Este roteiro não faz diagnóstico.</p><button class="primary" type="submit">Preparar minha conversa →</button></form>`}
+ else if(step===2&&r){body=`${route==='harm'?safety():''}<div class="card"><p class="eyebrow">${esc(r.label)}</p><h2>Encontre uma abertura.</h2><p>${esc(r.intro)}</p><p class="quote">${esc(r.question)}</p>${button('copy','Copiar pergunta','secondary','data-copy="question"')}<p>${esc(r.follow)}</p></div><div class="card"><h2>Se não quiser falar agora</h2><p>${esc(C.pause)}</p><label class="check"><input id="ack" type="checkbox" ${ack?'checked':''}> Li as sugestões e quero escolher um próximo apoio.</label></div><div class="actions">${button('previous','← Voltar','secondary')}${button('next','Escolher próximo apoio →')}</div>`}
+ else if(step===3&&r){body=`${route==='harm'?safety():''}<article class="card"><p class="eyebrow">UM PLANO INICIAL</p><h2>${esc(r.label)}</h2><h3>O que você pode fazer agora</h3><p>${esc(r.today)}</p><h3>Como continuar</h3><p>${esc(r.next)}</p><p class="small">Esse é um roteiro educativo, não uma avaliação da criança ou da escola.</p></article><div class="actions">${button('previous','← Rever a conversa','secondary')}${button('print','Imprimir plano','secondary')}${button('export-plan','Baixar plano .txt','secondary')}</div><div class="card soft"><h2>Continue com uma atividade breve.</h2><p>A trilha de sete dias organiza pequenas ações do adulto. Todas as atividades estão abertas, sem prazo obrigatório.</p><a class="primary" href="#trilha">Conhecer minha trilha →</a></div>${button('restart','Recomeçar roteiro','text-button')}`}
+ return `${header('ROTEIRO EM 3 PASSOS','Observe. Converse.<br><em>Combine apoio.</em>')}<ol class="stepper" aria-label="Etapas do roteiro">${['Observar','Conversar','Apoiar'].map((s,i)=>`<li ${step===i+1?'aria-current="step"':''}><span>${i+1}</span>${s}</li>`).join('')}</ol>${body}`}
+ function trail(){const state=P.snapshot();return `${header('MINHA TRILHA','Sete atividades.<br><em>Uma de cada vez.</em>','Siga na ordem que fizer sentido, pause e retome. Concluir a trilha registra suas ações de apoio, não um resultado da criança.')}<div class="card compact"><div class="spread"><b>${state.days.length} de 7 concluídas</b><a href="#privacidade">Como meu progresso é salvo?</a></div><progress value="${state.days.length}" max="7"></progress></div><div class="day-grid">${C.days.map(d=>`<a href="#dia-${d.id}" class="day-card ${state.days.includes(d.id)?'done':''}"><span class="eyebrow">ATIVIDADE ${d.id} · ${d.step.toUpperCase()}</span><h2>${esc(d.title)}</h2><p>${esc(d.time)}</p><span class="day-bottom">${state.days.includes(d.id)?'✓ Concluída · Revisitar':'Abrir atividade →'}</span></a>`).join('')}</div><p class="small">Em ameaça, agressão ou sofrimento intenso, procure apoio adequado sem esperar chegar a uma atividade específica.</p>`}
+ function day(id){const d=C.days.find(x=>x.id===id);if(!d)return notFound();const done=P.snapshot().days.includes(id);return `${header(`ATIVIDADE ${id} DE 7 · ${d.time.toUpperCase()}`,esc(d.title))}<div class="card"><p class="eyebrow">POR QUE COMEÇAR POR AQUI</p><p>${esc(d.why)}</p><h2>Uma ação possível</h2><p>${esc(d.action)}</p><p class="quote">${esc(d.example)}</p></div><div class="card"><h2>Para pensar agora</h2><fieldset class="reflection"><legend>${esc(d.question)}</legend>${d.choices.map((c,i)=>`<label class="option"><input type="radio" name="reflection" value="${i}"><span>${esc(c)}</span></label>`).join('')}</fieldset><p class="small">Essa escolha é opcional e não é salva. Não há resposta certa.</p></div><div class="takeaway"><b>Para levar com você</b><p>${esc(d.takeaway)}</p></div><div class="actions">${button('toggle-day',done?'Desmarcar atividade':'Concluir atividade',done?'secondary':'primary',`data-day="${id}"`)}<a class="secondary" href="${id<7?'#dia-'+(id+1):'#trilha'}">${id<7?'Ir para a próxima →':'Ver minha trilha →'}</a></div><a class="text-link" href="#trilha">← Voltar à trilha</a>`}
+ function resources(){return `${header('FRASES E RECURSOS','Palavras para adaptar.<br><em>Apoio para continuar.</em>','Os modelos ajudam a começar. Adapte fora do app, sem guardar relatos íntimos ou dados da criança aqui.')}${resource('Para começar a conversa','Tem alguma parte do dia na escola que você quer me contar?','open')}${resource('Para respeitar uma pausa',C.pause,'pause')}${resource('Para conversar com a escola',C.school,'school')}<div class="card"><h2>Antes de enviar uma mensagem</h2><ul><li>Descreva observações concretas e peça contexto.</li><li>Evite nomes de outras crianças em mensagens compartilhadas.</li><li>Combine como vocês vão acompanhar o que foi discutido.</li><li>Em risco, procure apoio diretamente, sem esperar retorno por mensagem.</li></ul></div><details class="card"><summary>Referências editoriais</summary><p>Conteúdo autoral baseado em orientações de escuta e apoio escolar, sem endosso das instituições ao produto.</p><a href="https://www.unicef.org/lac/en/parenting-lac/security-protection/how-talk-your-children-about-bullying" target="_blank" rel="noopener noreferrer">UNICEF: conversa com filhos</a><br><a href="https://www.unicef.org/parenting/child-care/how-talk-school-about-bullying" target="_blank" rel="noopener noreferrer">UNICEF: conversa com a escola</a></details>`}
+ function privacy(){const state=P.snapshot();return `${header('MEU PROGRESSO','Você escolhe<br><em>o que fica salvo.</em>','O app não pede nome, escola, foto ou relato da criança. Suas escolhas no roteiro e nas reflexões não ficam gravadas.')}<div class="card"><h2>Retomar neste navegador</h2><label class="check"><input type="checkbox" id="remember" ${state.remember?'checked':''}> Guardar apenas as atividades concluídas neste navegador.</label><p>Com a opção desligada, o progresso fica só enquanto esta página está aberta. Com ela ligada, ficam salvos somente os números das atividades concluídas.</p><p>Em um dispositivo compartilhado, outras pessoas podem ver esse progresso. Não há sincronização entre dispositivos nesta versão.</p>${state.warning?`<p class="warning">${esc(state.warning)}</p>`:''}<div class="actions">${button('export-progress','Baixar meu progresso','secondary')}${button('reset-progress','Apagar meu progresso','danger')}</div><div id="reset-confirm" hidden><p>Apagar as atividades concluídas e desativar o salvamento neste navegador?</p>${button('confirm-reset','Sim, apagar','danger')}${button('cancel-reset','Cancelar','secondary')}</div></div><div class="card soft"><h2>Separado da compra</h2><p>Esse progresso não comprova compra nem concede acesso. A versão paga precisa ter autenticação e verificação de pagamento conectadas pelo responsável pela operação.</p></div>`}
+ function help(){return header('AJUDA','Como usar<br><em>seu espaço de apoio.</em>')+'<div class="card"><h2>Por onde começar</h2><p>Abra o roteiro em três passos para preparar uma conversa. A trilha tem sete atividades que você pode fazer em qualquer ordem.</p><h2>Salvar e retomar</h2><p>Em Meu progresso, você pode escolher guardar apenas as atividades concluídas neste navegador, exportar ou apagar esse registro. As escolhas sobre a situação da criança e as reflexões não são salvas.</p><h2>Atendimento</h2><p>O canal de atendimento da operação ainda não foi conectado. Esta página não envia mensagens nem abre chamados.</p><a class="secondary" href="#privacidade">Gerenciar meu progresso</a></div><div class="card soft"><h2>Se houver risco</h2><p>Não espere atendimento pelo aplicativo. Procure apoio adequado à situação.</p><a class="secondary" href="#seguranca">Ver orientações de segurança</a></div>'}
+ function security(){return `${header('PROTEÇÃO E APOIO','Segurança<br><em>vem primeiro.</em>')}${safety()}<div class="card"><h2>Um começo para acolher</h2><p class="quote">Obrigado por me contar. Você está seguro agora? Vou procurar ajuda com você.</p><ul><li>Leve o relato a sério e procure garantir a segurança.</li><li>Procure a escola e os serviços adequados à situação.</li><li>Não deixe a criança responsável por resolver violência ou ameaça.</li><li>Não use o SAC como atendimento clínico ou canal de emergência.</li></ul></div><a class="secondary" href="#inicio">Voltar ao início</a>`}
+ const notFound=()=>`${header('PÁGINA NÃO ENCONTRADA','Vamos voltar<br><em>ao seu começo?</em>')}<a class="primary" href="#inicio">Abrir início</a>`;
+ function render(focus=true){const hash=location.hash.slice(1)||'inicio';let html;if(hash==='inicio')html=home();else if(hash==='roteiro')html=wizard();else if(hash==='trilha')html=trail();else if(/^dia-[1-7]$/.test(hash))html=day(Number(hash.slice(4)));else if(hash==='recursos')html=resources();else if(hash==='privacidade')html=privacy();else if(hash==='ajuda')html=help();else if(hash==='seguranca')html=security();else html=notFound();view.innerHTML=html;document.querySelectorAll('[data-nav]').forEach(a=>{if(a.dataset.nav===hash||(hash.startsWith('dia-')&&a.dataset.nav==='trilha'))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});if(focus){document.querySelector('#main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'})}document.querySelector('#status').textContent=P.snapshot().warning||''}
+ const say=t=>document.querySelector('#status').textContent=t;
+ function plan(){const r=route?C.routes[route]:null;return r?`Mãe da Guarda | Plano inicial\n\nSituação selecionada: ${r.label}\n\nPara conversar:\n${r.question}\n${r.follow}\n\nAgora:\n${r.today}\n\nComo continuar:\n${r.next}\n\n${C.safety}\n\nConteúdo educativo. Não é avaliação clínica nem promessa de resultado.`:'Abra o roteiro para preparar seu plano.'}
+ function download(text,name){const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+ async function copy(key){const values={open:'Tem alguma parte do dia na escola que você quer me contar?',pause:C.pause,school:C.school,question:route?C.routes[route].question:''};const value=values[key];if(!value)return;try{await navigator.clipboard.writeText(value);say('Texto copiado. Adapte à sua conversa.')}catch{say('Cópia automática indisponível. Selecione e copie o texto visível no cartão.')}}
+ view.addEventListener('submit',e=>{if(e.target.id!=='route-form')return;e.preventDefault();if(!e.target.reportValidity())return;route=new FormData(e.target).get('route');if(!C.routes[route])return;step=2;render()});
+ view.addEventListener('change',e=>{if(e.target.name==='route'){route=e.target.value;render(false)}if(e.target.id==='ack')ack=e.target.checked;if(e.target.id==='remember'){P.setRemember(e.target.checked);render(false);say(P.snapshot().warning||(P.snapshot().remember?'Salvamento local ativado.':'Registro local removido. O progresso atual fica somente nesta sessão.'))}});
+ view.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;switch(b.dataset.action){case'copy':copy(b.dataset.copy);break;case'previous':step=Math.max(1,step-1);render();break;case'next':if(!ack){say('Marque que leu as sugestões para continuar.');document.querySelector('#ack').focus();return}step=3;render();break;case'restart':route=null;ack=false;step=1;render();break;case'export-plan':download(plan(),'mae-da-guarda-plano.txt');say('Download do plano solicitado. O arquivo contém a situação que você selecionou; guarde com cuidado.');break;case'print':{const el=document.querySelector('#print-area');el.textContent=plan();window.print();break}case'toggle-day':{const id=Number(b.dataset.day);P.setDay(id,!P.snapshot().days.includes(id));render(false);say(P.snapshot().warning||'Progresso atualizado. Você pode revisitar a atividade.');break}case'export-progress':download(JSON.stringify({product:'Mãe da Guarda',version:1,completedDays:P.snapshot().days},null,2),'mae-da-guarda-progresso.json');say('Download solicitado. Apenas números de atividades são exportados.');break;case'reset-progress':document.querySelector('#reset-confirm').hidden=false;break;case'cancel-reset':document.querySelector('#reset-confirm').hidden=true;break;case'confirm-reset':{const ok=P.reset();route=null;step=1;ack=false;render(false);say(ok?'Progresso apagado e salvamento desativado.':P.snapshot().warning);break}}});
+ window.addEventListener('beforeprint',()=>{document.querySelector('#print-area').textContent=plan()});window.addEventListener('afterprint',()=>{document.querySelector('#print-area').textContent=''});
+ window.addEventListener('hashchange',()=>render());window.addEventListener('storage',e=>{if(e.key==='mg-progress-v1')say('O progresso foi alterado em outra aba. Recarregue para atualizar antes de continuar.');});render(false);
 })();

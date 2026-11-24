@@ -1,7 +1,7 @@
-# Estado da entrega — 23/11/2026
+# Estado da entrega — 24/11/2026
 
-Nova interface integrada com roteiro em três etapas, quatro situações, sete atividades, recursos, ajuda local e progresso opcional no navegador. Imagens e fontes locais incluídas.
+Interface publicada com roteiro em três etapas, quatro situações, sete atividades, recursos e progresso opcional no navegador. Removidos o banner de demonstração e o aviso de versão paga em Meu progresso. A aba de ajuda inclui um botão no rodapé para https://sac.maedaguarda.com.br/.
 
-Publicação solicitada pelo proprietário como demonstração pública em app.maedaguarda.com.br. Não há pagamento, conta, acesso comercial protegido ou atendimento conectado. O modo local permite demonstração e não comprova compra.
+O proprietário está finalizando os acessos no serviço externo. Esta alteração adiciona somente o direcionamento ao SAC e não altera autenticação, checkout ou controle de acesso. Não foram executados testes de atendimento, compra ou acesso no serviço externo.
 
-Pendente antes da venda: escolher e implementar autenticação, autorização no servidor para conteúdo e arquivos, checkout, webhook verificado, reembolso, suporte real e revisões profissional e jurídica. Consulte INTEGRACAO.md e PENDENCIAS-PARA-PUBLICAR.md.
+Persistência continua opcional, apenas dos números das atividades; sem dados identificáveis da criança. Revisões profissional e jurídica continuam descritas nos documentos de integração.

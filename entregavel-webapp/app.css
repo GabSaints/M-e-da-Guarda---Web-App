@@ -5,3 +5,5 @@ body{font-size:16px}p,li,.lead,.home-hero p,.day-card p,.option,.reflection .opt
 @media print{@page{margin:18mm}#print-area{padding:0;orphans:3;widows:3}}
 
 .hero-art{display:grid;place-items:center;background:#f0e2dc;min-height:300px;overflow:hidden}.hero-art svg{width:100%;max-width:400px;height:100%;max-height:400px}@media(max-width:740px){.hero-art{min-height:220px;max-height:250px}.hero-art svg{height:250px}}
+
+.help-footer{border-top:1px solid #e4d8dd;margin-top:32px;padding:28px 0 8px}.help-footer .primary{max-width:100%;overflow-wrap:anywhere}aside{min-height:calc(100vh - 81px)}@media(max-width:740px){.help-footer .primary{width:100%}aside{min-height:0}}

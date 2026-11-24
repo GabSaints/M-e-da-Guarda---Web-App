@@ -1,3 +1,2 @@
-// Configuração pública. Não contém autenticação, pagamentos ou segredos.
-window.MG_APP_CONFIG = { mode: 'local', supportUrl: '#ajuda' };
-// Publicação demonstrativa autorizada. Acesso comercial exige proteção real no servidor.
+// Endereço público da central de atendimento. Não incluir segredos neste arquivo.
+window.MG_APP_CONFIG = { mode: 'local', supportUrl: 'https://sac.maedaguarda.com.br/' };

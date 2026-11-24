@@ -27,4 +27,4 @@ Os sete dias são uma estrutura flexível, sem desbloqueio obrigatório, notific
 
 ## Implantação deste repositório
 
-A raiz configurada na Vercel é `entregavel-webapp`. A publicação atual é uma demonstração pública autorizada pelo proprietário, com ajuda interna em `#ajuda`. Não inclui SAC conectado nem venda. O progresso é opcional e restrito ao navegador. Para testar isoladamente, sirva esta pasta por HTTP e abra `/`.
+A raiz configurada na Vercel é `entregavel-webapp`. A publicação é autorizada pelo proprietário, com ajuda interna em `#ajuda` e direcionamento para `https://sac.maedaguarda.com.br/`. Não há checkout dentro do aplicativo. Os acessos externos são geridos separadamente pelo proprietário. O progresso é opcional e restrito ao navegador. Para testar isoladamente, sirva esta pasta por HTTP e abra `/`.

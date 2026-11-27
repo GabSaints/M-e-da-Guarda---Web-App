@@ -1,13 +1,7 @@
-# Verificações — revisão de 27/11/2026
+# Verificações — trilha opcional de sete dias
 
-node verify.cjs: 300 verificações com DOM simulado passaram. Incluem 21 combinações (sete situações × três idades), pergunta distinta por idade, validação de seleção, reconhecimento de leitura, abertura/copiar, orientação de continuidade, TXT, impressão e limpeza após imprimir; ferramentas e marcações; migração sem perda das marcações antigas; aliases de links; corrupção e falha de armazenamento; exportação sem faixa etária/situação/reflexões; link do SAC e existência dos arquivos locais.
+node verify.cjs: 547 verificações com DOM simulado passaram. Além dos fluxos anteriores, cobrem todas as 21 trilhas (147 dias), existência dos parágrafos e variações, adaptação etária, fechamento no dia sete, progresso independente por combinação, marcar/desmarcar, conclusão, exportação TXT, conteúdo da prévia e impressão, limpeza, dados inválidos e ausência de persistência automática. Backup/restauração preservam os dias e rejeitam valores inválidos, situações inexistentes e campos extras.
 
-JavaScript validado com node --check. Estes testes não comprovam renderização visual, atendimento profissional ou segurança de serviços externos. Revisão no navegador da implantação deve complementar os testes.
+JavaScript verificado com node --check. DOM simulado não substitui revisão visual. A interface e a prévia de impressão devem ser conferidas na implantação em celular e desktop. O diálogo nativo de impressão não é automatizado, pois bloqueou o controle da aba na revisão anterior; a prévia do próprio app permite conferir o mesmo documento antes de imprimir. Nenhuma impressão física é enviada pelos testes.
 
-Acesso, checkout e SAC externos não foram alterados nem certificados. As orientações continuam educativas e não substituem revisão profissional brasileira.
-
-## Revisão da implantação no navegador
-
-Interface conferida em desktop (1440×1000) e celular (390×844), sem overflow horizontal observado. Exercitados caso de silêncio para 4–6 anos, medo para 11+, vergonha para 7–10, troca de faixa/situação, cópia, seleção pela biblioteca e aviso imediato ao selecionar ameaça. Navegação por situações, ferramentas, recursos, marcações, segurança e ajuda conferida.
-
-O comando de impressão abriu diálogo que bloqueou o controle automático da aba. O conteúdo da impressão e sua limpeza foram validados nos testes de lógica, mas a prévia visual de impressão não foi validada automaticamente. Nenhuma impressão física foi enviada.
+Sem certificação de atendimento, proteção de acesso ou serviços externos. Conteúdo educativo sujeito à revisão profissional.

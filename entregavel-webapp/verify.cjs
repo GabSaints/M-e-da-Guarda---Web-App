@@ -7,7 +7,7 @@ function boot(saved,{readFail=false,writeFail=false}={}){
  let currentHash='';const location={href:'https://app.maedaguarda.com.br/',get hash(){return currentHash},set hash(v){currentHash=v.startsWith('#')?v:'#'+v}};
  const context={console,URL:TestURL,Blob,setTimeout,location,document:{querySelector:element,querySelectorAll:()=>[],createElement:()=>({click(){}})},localStorage:{getItem:k=>{if(readFail)throw Error('blocked');return store.get(k)||null},setItem:(k,v)=>{if(writeFail)throw Error('blocked');store.set(k,v)},removeItem:k=>store.delete(k)},FormData:class{get(key){return key==='age'?context.selectedAge:context.selected}},navigator:{clipboard:{writeText:async text=>context.copied=text}}};
  context.window=context;context.scrollTo=()=>{};context.print=()=>events.beforeprint?.();context.addEventListener=(n,fn)=>events[n]=fn;vm.createContext(context);
- for(const f of ['config.js','content.js','progress.js','app.js'])vm.runInContext(fs.readFileSync(f,'utf8'),context,{filename:f});
+ for(const f of ['config.js','content.js','progress.js','trail.js','app.js'])vm.runInContext(fs.readFileSync(f,'utf8'),context,{filename:f});
  return{context,store,events,handlers,element,downloads,navigate(hash){context.location.hash='#'+hash;events.hashchange();return element('#view').innerHTML},action(action,data={}){handlers.click({target:{closest:()=>({dataset:{action,...data}})}})},choose(situation,age){context.selected=situation;context.selectedAge=age;handlers.change({target:{name:'age',value:age}});handlers.change({target:{name:'route',value:situation}})},submit(){handlers.submit({target:{id:'route-form',reportValidity:()=>true},preventDefault(){}})}};
 }
 (async()=>{
@@ -34,6 +34,31 @@ function boot(saved,{readFail=false,writeFail=false}={}){
      app.action('export-plan');const exported=await app.downloads.at(-1).text();check(exported.includes(r.ages[age]),'TXT matches age question');
    }
  }
+ 
+ for(const scenario of Object.keys(C.routes))for(const age of Object.keys(C.ages)){
+ app.navigate('guia');app.action('restart');app.choose(scenario,age);app.submit();
+ const days=app.context.MG_TRAIL.create(scenario,age);check(days.length===7,'Seven days for '+scenario+'/'+age);
+ check(days.every((d,i)=>d.day===i+1&&d.body.length>250&&d.variation.length>70&&d.ageTip===C.ages[age].note),'Explanatory paragraphs and contextual variables');
+ check(days[6].body.includes('o que aprendeu')&&days[6].body.includes('não presume'),'Day seven honest adult learning review');
+ check(days[1].body.includes(C.routes[scenario].ages[age]),'Age question embedded in daily plan');
+ let page=app.navigate('plano-7-dias');check(page.includes('0 de 7 dias realizados'),'Independent trail starts empty');
+ for(let day=1;day<=7;day++)app.handlers.change({target:{name:'trail-day',value:String(day),checked:true}});
+ page=app.element('#view').innerHTML;check(page.includes('7 de 7 dias realizados')&&page.includes('100%'),'All days complete progress');
+ check(page.includes('Você marcou os sete dias'),'Completion reflection');
+ app.handlers.change({target:{name:'trail-day',value:'3',checked:false}});check(app.element('#view').innerHTML.includes('6 de 7 dias realizados'),'Uncheck reverses progress');
+ app.action('export-trail');const txt=await app.downloads.at(-1).text();check(txt.includes('DIA 7')&&txt.includes(C.ages[age].label)&&txt.includes('[x]')&&txt.includes('[ ]'),'Complete TXT with checkboxes');
+ page=app.navigate('prever-trilha');check(page.includes('Salvar como PDF')&&page.includes('Dia 7')&&page.includes('Se a situação variar'),'Print preview instructions and all days');
+ app.action('print-trail');check(app.element('#print-area').innerHTML.includes('Dia 7')&&app.element('#print-area').innerHTML.includes(C.routes[scenario].label),'Dedicated trail print');app.events.afterprint();
+ if(scenario==='harm')check(days.every(d=>d.variation.includes('proteção')||d.variation.includes('apoio')||d.variation.includes('adultos')||d.variation.includes('acompanhamento')),'Urgent trail never delays safety');
+ }
+ const savedTrail=app.context.MG_TRAIL.backup('fear','older');const resumed=boot();check(resumed.context.MG_TRAIL.restore(savedTrail),'Restore selected trail from file data');check(resumed.context.MG_TRAIL.snapshot('fear','older').length===6,'Restore exact marked days');check(resumed.store.size===0,'Restoring does not persist history');check(!resumed.context.MG_TRAIL.restore({...savedTrail,days:[0,8]}),'Reject invalid imported days');check(!resumed.context.MG_TRAIL.restore({...savedTrail,route:'__proto__'}),'Reject invalid imported scenario');check(!resumed.context.MG_TRAIL.restore({...savedTrail,notes:'private'}),'Reject extra fields');
+ app.action('backup-trail');const trailBackup=JSON.parse(await app.downloads.at(-1).text());check(trailBackup.format==='mg-trail-v1','Download restorable progress format');
+ check(app.store.size===0,'Trail selections not saved by marking');
+ check(boot().context.MG_TRAIL.snapshot('unclear','young').length===0,'Fresh page has no sensitive trail history');
+ check(app.context.MG_TRAIL.create('invalid','young').length===0,'Invalid plan is rejected');
+ app.context.MG_TRAIL.setDay('unclear','young',99,true);check(!app.context.MG_TRAIL.snapshot('unclear','young').includes(99),'Invalid day is rejected');
+ app.context.MG_TRAIL.reset();check(app.context.MG_TRAIL.snapshot('unclear','young').length===0,'Clear all trail session markers');
+ 
  check(app.store.size===0,'No persistence by default, including age and situation');
  app.action('previous');app.action('previous');app.choose('fear','young');app.submit();app.action('next');check(app.element('#status').textContent.includes('Marque'),'Acknowledgement resets for new case');
  for(let id=1;id<=7;id++){check(app.navigate('ferramenta-'+id).includes('Uma ação possível'),'Tool '+id);app.action('toggle-day',{day:String(id)});check(app.element('#view').innerHTML.includes('Desmarcar ferramenta'),'Mark tool');check(app.navigate('dia-'+id).includes(C.days[id-1].title),'Legacy activity bookmark');}

@@ -1,30 +1,24 @@
-# Mãe da Guarda | entrega para mentorado
+# Mãe da Guarda — guia para as conversas difíceis
 
-Oferta: R$ 19,90, pagamento único. Público: mães e responsáveis que querem apoiar a criança na convivência escolar. Promessa: observar, conversar e combinar apoio. Não garantir popularidade, amizades, fim de bullying ou resultado clínico.
+Aplicativo educativo para mães, pais e responsáveis. A proposta é consultar uma situação, adaptar a linguagem à faixa etária e pensar em como acompanhar. Não há sequência diária, prazo para a criança se abrir, diagnóstico ou promessa de amizade, popularidade ou resultado clínico.
 
-Este pacote tem frontend e conteúdo implementados. NÃO possui autenticação real, verificação de pagamento, banco de dados ou implantação de produção. Não é suficiente conectar uma tabela: o mentorado precisa implementar o servidor, proteção de acesso, permissões, checkout e atendimento conforme o pacote.
+## Conteúdo e navegação
 
-Extraia os três ZIPs dentro da mesma pasta, mantendo as pastas irmãs `pagina-vendas`, `entregavel-webapp` e `sac`. Sirva essa pasta pai com `python3 -m http.server 4185 --bind 127.0.0.1`. Abra a rota correspondente. Não abra por file://. Cada pasta também pode ser hospedada separadamente após ajustar seus links públicos.
+- Meu guia: situação + faixa etária (4–6, 7–10 ou 11 anos ou mais), abertura, resposta a evitar, próximos apoios, TXT e impressão.
+- Situações: silêncio/“normal”, mais tempo sozinho, exclusão/rejeição, medo, vergonha, sensação de desamparo e ameaça/agressão/falta de proteção. São cenas ilustrativas, não casos reais.
+- Ferramentas de conversa: sete práticas independentes, consultáveis em qualquer ordem. Marcar uso é opcional e não mede a criança.
+- Frases e recursos: convite, reparação de resposta apressada, pausa e modelo para a escola.
+- Proteção: apoio profissional e serviços adequados sem oferta comercial.
+- Ajuda: direcionamento para https://sac.maedaguarda.com.br/.
 
-Sem dependências de build. HTML/CSS/JS editáveis e fontes locais. Não há chaves, dados reais de clientes ou dependências de desenvolvimento nos ZIPs. Os modos locais não comprovam compra nem concedem acesso de produção. Não publicar o conteúdo pago como arquivos públicos.
+## Privacidade e compatibilidade
 
-## O que funciona
+Sem campos de nome, escola, foto ou relato íntimo. Faixa etária, situação e reflexões ficam na memória da página; não são salvas nem exportadas com as marcações. TXT e impressão das orientações incluem faixa etária e situação: há aviso para guardar e compartilhar com cuidado.
 
-- Roteiro em três etapas, quatro situações, possibilidade de voltar e reiniciar.
-- Rota de agressão/ameaça com proteção visível desde a seleção, sem esperar concluir etapas.
-- Pergunta contextual, alternativa para pausa, ação de hoje e continuidade.
-- Plano em TXT e impressão.
-- Sete atividades completas com contexto, ação, exemplo, reflexão opcional e conclusão reversível.
-- Navegação por hash, página desconhecida, controle de progresso, exportação JSON e exclusão.
-- Progresso em memória por padrão; localStorage somente após opção explícita. Só números de atividades e preferência de salvamento são persistidos. Reflexões e situação escolhida NÃO são persistidas ou exportadas com o progresso.
-- Plano exportado/imprimível inclui a situação selecionada e exige cuidado no compartilhamento.
+O salvamento local é opcional, apenas dos identificadores das ferramentas usadas e da preferência de salvamento. A chave anterior foi preservada para manter as marcações existentes. Links antigos #roteiro, #trilha e #dia-1 a #dia-7 continuam funcionando com a nova apresentação.
 
-## Rodar e editar
+## Desenvolvimento e implantação
 
-Abra `/entregavel-webapp/`. Conteúdo em `content.js`; interface em `app.js`; adaptação de persistência em `progress.js`; links e modo em `config.js`. O modo `production` hoje bloqueia a interface: é uma trava de prevenção, NÃO autenticação. Os arquivos continuam legíveis se publicados estaticamente; o mentorado precisa de proteção real no servidor/CDN antes de liberar o conteúdo pago.
+HTML/CSS/JS sem build. Arquivos: index.html, app.css, app.js, content.js, config.js e progress.js. Fontes locais com licença OFL. Sirva esta pasta por HTTP. Verificação funcional: node verify.cjs (DOM simulado); revisão visual separada.
 
-Os sete dias são uma estrutura flexível, sem desbloqueio obrigatório, notificações, ranking ou avaliação da criança. O app não contém chat clínico, diagnóstico ou acompanhamento humano.
-
-## Implantação deste repositório
-
-A raiz configurada na Vercel é `entregavel-webapp`. A publicação é autorizada pelo proprietário, com ajuda interna em `#ajuda` e direcionamento para `https://sac.maedaguarda.com.br/`. Não há checkout dentro do aplicativo. Os acessos externos são geridos separadamente pelo proprietário. O progresso é opcional e restrito ao navegador. Para testar isoladamente, sirva esta pasta por HTTP e abra `/`.
+A raiz do projeto Vercel é entregavel-webapp. Destino autorizado: https://app.maedaguarda.com.br/. O proprietário gerencia os acessos em serviço externo; esta atualização não implementa nem certifica autenticação, compra ou atendimento externo. Não incluir segredos no frontend. Revisões profissional e jurídica continuam necessárias conforme os documentos de integração.

@@ -39,6 +39,7 @@ function boot(saved,{readFail=false,writeFail=false}={}){
  for(let id=1;id<=7;id++){check(app.navigate('ferramenta-'+id).includes('Uma ação possível'),'Tool '+id);app.action('toggle-day',{day:String(id)});check(app.element('#view').innerHTML.includes('Desmarcar ferramenta'),'Mark tool');check(app.navigate('dia-'+id).includes(C.days[id-1].title),'Legacy activity bookmark');}
  check(app.navigate('trilha').includes('FERRAMENTAS DE CONVERSA'),'Legacy trail bookmark');
  app.navigate('situacoes');app.action('open-case',{case:'shame'});app.events.hashchange();check(app.element('#view').innerHTML.includes('value="shame" checked'),'Library selects case');
+ app.navigate('situacoes');app.action('open-case',{case:'harm'});app.events.hashchange();check(app.context.location.hash==='#seguranca'&&app.element('#view').innerHTML.includes('Segurança'),'Urgent library case goes directly to protection');
  app.context.MG_PROGRESS.setRemember(true);check(app.store.size===1,'Opt-in persistence');const stored=JSON.parse(app.store.get('mg-progress-v1'));check(Object.keys(stored).sort().join(',')==='days,remember,version','Only tool IDs and consent persisted');check(stored.days.length===7,'Preserve existing seven IDs');
  const restored=boot(app.store.get('mg-progress-v1'));check(restored.context.MG_PROGRESS.snapshot().days.length===7,'Restore previous progress');
  app.action('export-progress');const exported=JSON.parse(await app.downloads.at(-1).text());check(Object.keys(exported).sort().join(',')==='product,usedTools,version','Export no age, scenario or reflections');
